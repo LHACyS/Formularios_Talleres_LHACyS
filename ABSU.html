@@ -127,19 +127,49 @@ tr:last-child td {
 
 /* Recuadro azul suave para nuevos materiales manuales */
 .input-extra-nombre {
-  width: 90%;
+  width: 100%;
+  min-height: 38px;
   padding: 8px;
   border: 1px solid #b6d4f9;
   border-radius: 4px;
+  font-family: Arial, sans-serif;
   font-size: 0.95em;
+  line-height: 1.35;
   background-color: #eef7ff;
   color: #1a82e2;
   font-weight: bold;
+  text-align: justify;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  vertical-align: top;
 }
 
 .input-extra-nombre::placeholder {
   color: #70a6df;
   font-weight: normal;
+}
+/* Copia imprimible del material añadido. Evita que el contenido del textarea
+   quede recortado al guardar como PDF. */
+.material-impresion {
+  display: none;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px;
+  border: 1px solid #b6d4f9;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  font-size: 0.95em;
+  line-height: 1.35;
+  background-color: #eef7ff;
+  color: #1a82e2;
+  font-weight: bold;
+  text-align: justify;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 
 /* Botón para añadir filas de forma dinámica */
@@ -186,6 +216,23 @@ tr:last-child td {
 tr:hover {
   background-color: #f8fafc;
 }
+/* Copia de las observaciones usada únicamente al imprimir.
+   Un div sí crece y se pagina correctamente cuando el texto es largo. */
+.comentarios-impresion {
+  display: none;
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  font-family: Arial, sans-serif;
+  font-size: 1em;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
 
 @media (max-width: 768px) {
   .solicitante-box {
@@ -213,11 +260,37 @@ tr:hover {
     display: none !important;
   }
 
-  /* Evitar que el cuadro de texto se corte y expandir todo lo escrito */
+  /* En impresión se sustituye el textarea por un bloque que crece con todo el texto. */
   .comentarios-box textarea {
-    border: 1px solid #ccc !important;
+    display: none !important;
+  }
+  .comentarios-impresion {
+    display: block !important;
+    min-height: 120px;
     height: auto !important;
-    resize: none !important;
+    overflow: visible !important;
+    border: 1px solid #ccc !important;
+    break-inside: auto;
+  }
+  .comentarios-box {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  .input-extra-nombre {
+    display: none !important;
+  }
+  .material-impresion {
+    display: block !important;
+    height: auto !important;
+    min-height: 38px !important;
+    overflow: visible !important;
+    text-align: justify !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+  }
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
 </style>
@@ -297,7 +370,8 @@ tr:hover {
       <h2>Comentarios y Organización del Taller</h2>
       <div class="comentarios-box">
         <label style="color: #555; font-size: 0.95em;" for="comentarios">Indique aquí cualquier especificación adicional sobre la distribución de las mesas, necesidades del aula o variaciones en los materiales:</label>
-        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Necesitamos espacio amplio para tumbar las colchonetas de RCP..."></textarea>
+        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Necesitamos espacio amplio para tumbar las colchonetas de RCP..." oninput="ajustarAlturaComentarios()"></textarea>
+        <div id="comentarios-impresion" class="comentarios-impresion" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -318,7 +392,8 @@ tr:hover {
     
     nuevaFila.innerHTML = `
       <td>
-        <input type="text" name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" placeholder="Nombre del material añadido...">
+        <textarea name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" rows="1" placeholder="Nombre del material añadido..." oninput="actualizarMaterial(this)"></textarea>
+        <div class="material-impresion" aria-hidden="true"></div>
       </td>
       <td>Manual</td>
       <td class="col-solicitada">
@@ -330,43 +405,95 @@ tr:hover {
     contadores[idTabla]++;
   }
 
-  function imprimirConNombreDinamico() {
-    // 1. Obtener el nombre del solicitante
-    let solicitante = document.getElementById('nombre').value.trim();
-    if (solicitante === "") {
-        solicitante = "Sin_Nombre";
+  function ajustarAlturaMaterial(campo) {
+    campo.style.height = 'auto';
+    campo.style.height = Math.max(38, campo.scrollHeight) + 'px';
+  }
+
+  function actualizarMaterial(campo) {
+    ajustarAlturaMaterial(campo);
+    const copia = campo.nextElementSibling;
+    if (copia && copia.classList.contains('material-impresion')) {
+      copia.textContent = campo.value.trim() || 'Material sin especificar';
     }
+  }
 
-    // 2. Extraer el nombre del taller del título (h1)
-    let h1Texto = document.querySelector('.header-banner h1').innerText;
-    let nombreTaller = h1Texto.includes(':') ? h1Texto.split(':')[1].trim() : "Taller";
+  function prepararMaterialesParaImpresion() {
+    document.querySelectorAll('.input-extra-nombre').forEach(actualizarMaterial);
+  }
 
-    // 3. Obtener y formatear la fecha actual (AAMMDD)
-    let fechaActual = new Date();
-    let anio = String(fechaActual.getFullYear()).slice(-2); // Toma los últimos 2 dígitos del año
-    let mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11, se suma 1
-    let dia = String(fechaActual.getDate()).padStart(2, '0');
-    let fechaFormateada = anio + mes + dia;
+  function ajustarAlturaComentarios() {
+    const textarea = document.getElementById('comentarios');
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.max(120, textarea.scrollHeight) + 'px';
+  }
 
-    // 4. Guardar el título original de la pestaña
+  function prepararComentariosParaImpresion() {
+    const textarea = document.getElementById('comentarios');
+    const copia = document.getElementById('comentarios-impresion');
+    copia.textContent = textarea.value.trim() || 'Sin observaciones.';
+    ajustarAlturaComentarios();
+  }
+
+  function limpiarNombreArchivo(texto) {
+    return texto
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')
+      .replace(/\s+/g, '_');
+  }
+
+  function abrirCorreoPreparado(nombreArchivo) {
+    const destinatario = 'ana.delasheras@uam.es';
+    const solicitante = document.getElementById('nombre').value.trim() || 'Sin nombre';
+    const asunto = 'Solicitud de material - ' + nombreArchivo.replace(/_/g, ' ');
+    const cuerpo =
+      'Buenos días,%0D%0A%0D%0A' +
+      'Adjunto la solicitud de material del taller cumplimentada por ' + encodeURIComponent(solicitante) + '.%0D%0A%0D%0A' +
+      'IMPORTANTE: adjunte a este correo el PDF que acaba de guardar antes de enviarlo.%0D%0A%0D%0A' +
+      'Un saludo.';
+
+    window.location.href =
+      'mailto:' + destinatario +
+      '?subject=' + encodeURIComponent(asunto) +
+      '&body=' + cuerpo;
+  }
+
+  function imprimirConNombreDinamico() {
+    let solicitante = document.getElementById('nombre').value.trim() || 'Sin_Nombre';
+    const h1Texto = document.querySelector('.header-banner h1').innerText;
+    const nombreTaller = h1Texto.includes(':') ? h1Texto.split(':')[1].trim() : 'Taller';
+
+    const fechaActual = new Date();
+    const anio = String(fechaActual.getFullYear()).slice(-2);
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    const fechaFormateada = anio + mes + dia;
+
+    solicitante = limpiarNombreArchivo(solicitante);
+    const nombreArchivo = limpiarNombreArchivo(
+      'Solicitud de material_' + nombreTaller + '_' + fechaFormateada + '_' + solicitante
+    );
+
+    prepararComentariosParaImpresion();
+    prepararMaterialesParaImpresion();
+
     const tituloOriginal = document.title;
+    document.title = nombreArchivo;
 
-    // 5. Cambiar el título al formato exacto solicitado incluyendo la fecha
-    document.title = "Solicitud de material" + "_" + nombreTaller + "_" + fechaFormateada + "_" + solicitante;
+    const despuesDeImprimir = () => {
+      document.title = tituloOriginal;
+      abrirCorreoPreparado(nombreArchivo);
+    };
 
-    // 6. Lanzar el diálogo de impresión
+    window.addEventListener('afterprint', despuesDeImprimir, { once: true });
     window.print();
-
-    // 7. Restaurar el título original para la visualización web
-    setTimeout(() => {
-        document.title = tituloOriginal;
-    }, 1000);
   }
 </script>
 
 <!-- Bloque de botones fijos -->
 <div class="contenedor-botones-fijos">
-    <button type="button" class="btn-accion btn-enviar-print" onclick="imprimirConNombreDinamico()">Imprimir PDF y Guardar Taller</button>
+    <button type="button" class="btn-accion btn-enviar-print" onclick="imprimirConNombreDinamico()">Guardar como PDF y preparar correo</button>
     <button type="button" class="btn-accion btn-cancelar" onclick="window.close()">Cerrar Pestaña</button>
 </div>
 

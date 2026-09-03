@@ -235,6 +235,60 @@ tr:hover {
     flex-direction: column;
   }
 }
+
+/* ===== Ajuste de campos extensos para pantalla e impresion PDF ===== */
+.input-extra-nombre {
+  width: 100% !important;
+  min-height: 38px;
+  padding: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 0.95em;
+  line-height: 1.35;
+  text-align: justify;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+.material-impresion, .comentarios-impresion {
+  display: none;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px;
+  border: 1px solid #b6d4f9;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  font-size: 0.95em;
+  line-height: 1.35;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+.material-impresion {
+  background-color: #eef7ff;
+  color: #1a82e2;
+  font-weight: bold;
+  text-align: justify;
+}
+.comentarios-impresion {
+  min-height: 120px;
+  margin-top: 10px;
+  border-color: #dcdfe6;
+  background: white;
+  color: #333;
+}
+@media print {
+  .input-extra-nombre, .comentarios-box textarea { display: none !important; }
+  .material-impresion, .comentarios-impresion {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .comentarios-box { break-inside: auto; page-break-inside: auto; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
+}
 </style>
 </head>
 
@@ -320,7 +374,8 @@ tr:hover {
       <h2>Comentarios y Organización del Taller</h2>
       <div class="comentarios-box">
         <label style="color: #555; font-size: 0.95em;" for="comentarios">Indique aquí cualquier especificación adicional sobre la distribución de las mesas, necesidades del aula o variaciones en los materiales:</label>
-        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Talleres organizados en 12 grupos de mañana / 8 de tarde con un promedio de 7-8 estudiantes por grupo..."></textarea>
+        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Talleres organizados en 12 grupos de mañana / 8 de tarde con un promedio de 7-8 estudiantes por grupo..." oninput="ajustarAlturaComentarios()"></textarea>
+        <div id="comentarios-impresion" class="comentarios-impresion" aria-hidden="true"></div>
       </div>
     </div>
   </div>
@@ -345,7 +400,8 @@ tr:hover {
     // Configurar las tres celdas interiores
     nuevaFila.innerHTML = `
       <td>
-        <input type="text" name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" placeholder="Nombre del material añadido...">
+        <textarea name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" rows="1" placeholder="Nombre del material añadido..." oninput="actualizarMaterial(this)"></textarea>
+        <div class="material-impresion" aria-hidden="true"></div>
       </td>
       <td>Manual</td>
       <td class="col-solicitada">
@@ -360,8 +416,37 @@ tr:hover {
     contadores[idTabla]++;
   }
 
+  function ajustarAlturaMaterial(campo) {
+    campo.style.height = 'auto';
+    campo.style.height = Math.max(38, campo.scrollHeight) + 'px';
+  }
+  function actualizarMaterial(campo) {
+    ajustarAlturaMaterial(campo);
+    const copia = campo.nextElementSibling;
+    if (copia && copia.classList.contains('material-impresion')) {
+      copia.textContent = campo.value.trim() || 'Material sin especificar';
+    }
+  }
+  function ajustarAlturaComentarios() {
+    const campo = document.getElementById('comentarios');
+    if (!campo) return;
+    campo.style.height = 'auto';
+    campo.style.height = Math.max(120, campo.scrollHeight) + 'px';
+  }
+  function prepararCamposParaImpresion() {
+    document.querySelectorAll('.input-extra-nombre').forEach(actualizarMaterial);
+    const comentarios = document.getElementById('comentarios');
+    const copiaComentarios = document.getElementById('comentarios-impresion');
+    if (comentarios && copiaComentarios) {
+      ajustarAlturaComentarios();
+      copiaComentarios.textContent = comentarios.value.trim() || 'Sin observaciones.';
+    }
+  }
+
+
 
   function imprimirConNombreDinamico() {
+    prepararCamposParaImpresion();
     // 1. Obtener el nombre del solicitante
     let solicitante = document.getElementById('nombre').value.trim();
     if (solicitante === "") {
