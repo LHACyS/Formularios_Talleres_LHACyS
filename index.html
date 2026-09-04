@@ -11,12 +11,13 @@
 .header-logo-box{width:min(1040px,96%);margin:0 auto 20px;padding:12px 20px;background:#fff;border-radius:12px;box-shadow:0 5px 16px #0003}
 .header-logo{display:block;width:100%;max-width:970px;height:auto;margin:auto} .header-banner h1{margin:0 auto;color:#fff;max-width:1200px;font-size:clamp(1.25rem,2.05vw,1.85rem);line-height:1.25;white-space:nowrap}
 .container{padding:0 40px;max-width:1240px;margin:32px auto 0} .intro{font-size:1.04rem;color:var(--texto);line-height:1.65;margin:0 0 26px}
-.menu-talleres{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.menu-talleres{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
 .menu-talleres li{background:#fff;padding:20px 23px;border:1px solid var(--linea);border-left:5px solid var(--verde);border-radius:12px;box-shadow:0 5px 15px #163d5a10;transition:.2s}
 .menu-talleres li:hover{transform:translateY(-2px);box-shadow:0 9px 22px #163d5a1b} .menu-talleres a{color:var(--azul-oscuro);font-weight:700;font-size:1.18rem;text-decoration:none;cursor:pointer} .menu-talleres a:hover{color:var(--verde)} .menu-talleres p{color:var(--texto);margin:7px 0 0;line-height:1.5;font-size:.93rem}
-.group{margin-top:26px;background:#fff;border:1px solid var(--linea);border-radius:16px;box-shadow:0 8px 24px #163d5a14;overflow:hidden}
+.menu-individual{margin-top:32px;}
+.group{margin-top:32px;background:#fff;border:1px solid var(--linea);border-radius:16px;box-shadow:0 8px 24px #163d5a14;overflow:hidden}
 .group-head{position:relative;display:flex;align-items:center;gap:13px;padding:18px 22px;background:linear-gradient(135deg,#176fb9,#1492bd);border-left:7px solid var(--verde);color:#fff}
-.group-icon{min-width:80px;height:36px;padding:0 124x;display:flex;align-items:center;justify-content:center;border-radius:8px;background:#ffffff22;border:1px solid #ffffff40;font-size:1rem;font-weight:800;white-space:nowrap}
+.group-icon{min-width:80px;height:36px;padding:0 12x;display:flex;align-items:center;justify-content:center;border-radius:8px;background:#ffffff22;border:1px solid #ffffff40;font-size:1rem;font-weight:800;white-space:nowrap}
 .group-head h2{font-size:1.25rem;margin:0;color:#fff} .group-head p{margin:4px 0 0;color:#e8f5ff;font-size:.91rem}
 .group-body{padding:20px} .subgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .subcard{display:flex;flex-direction:column;min-height:110px;padding:15px;border:1px solid #d7e5ed;border-radius:11px;background:linear-gradient(180deg,#fff,#f7fbfd);text-decoration:none;transition:.2s;cursor:pointer}
@@ -32,9 +33,6 @@
 <ul class="menu-talleres">
 <li><a onclick="abrirTaller('ABSU.html')">ABSU</a><p>Accede al formulario de solicitud de material del taller.</p></li>
 <li><a onclick="abrirTaller('ACP.html')">Auscultación Cardiopulmonar</a><p>Accede al formulario de solicitud de material del taller.</p></li>
-<li><a onclick="abrirTaller('Obstetricia y Ginecología.html')">Obstetricia y Ginecología</a><p>Accede al formulario de solicitud de material del taller.</p></li>
-<li><a onclick="abrirTaller('PT III_Suturas y Comunicación.html')">PT III: Suturas y Comunicación</a><p>Accede al formulario de solicitud de material del taller.</p></li>
-<li><a onclick="abrirTaller('Simulación y Modelado Clínico.html')">Simulación y Modelado Clínico</a><p>Accede al formulario de solicitud de material del taller.</p></li>
 </ul>
 
 <section class="group"><div class="group-head"><div class="group-icon">IPC</div><div><h2>Introducción a la Práctica Clínica</h2><p>Selecciona el seminario correspondiente.</p></div></div><div class="group-body"><div class="subgrid">
@@ -48,6 +46,12 @@
 <a class="subcard" onclick="abrirTaller('IPQ_Suturas.html')"><strong>Suturas</strong><span>Accede al formulario de solicitud de material.</span></a>
 </div></div></section>
 
+<div class="menu-individual">
+<ul class="menu-talleres">
+<li><a onclick="abrirTaller('Obstetricia y Ginecología.html')">Obstetricia y Ginecología</a><p>Accede al formulario de solicitud de material del taller.</p></li>
+</ul>
+</div>
+
 <section class="group"><div class="group-head"><div class="group-icon">PT I</div><div><h2>Prácticas Tuteladas I</h2><p>Selecciona el taller correspondiente.</p></div></div><div class="group-body"><div class="subgrid">
 <a class="subcard" onclick="abrirTaller('PT I_Administración de fármacos.html')"><strong>Administración de fármacos</strong><span>Formulario de solicitud de material.</span></a>
 <a class="subcard" onclick="abrirTaller('PT I_Aseo, movilización y vendajes.html')"><strong>Aseo, movilización y vendajes</strong><span>Formulario de solicitud de material.</span></a>
@@ -57,12 +61,23 @@
 <a class="subcard" onclick="abrirTaller('PT I_Sondaje vesical.html')"><strong>Sondaje vesical</strong><span>Formulario de solicitud de material.</span></a>
 </div></div></section>
 
+<div class="menu-individual">
+<ul class="menu-talleres">
+<li><a onclick="abrirTaller('PT III_Suturas y Comunicación.html')">PT III: Suturas y Comunicación</a><p>Accede al formulario de solicitud de material del taller.</p></li></ul>
+</div>
+
 <section class="group"><div class="group-head"><div class="group-icon">PT V</div><div><h2>Prácticas Tuteladas V</h2><p>Selecciona el taller correspondiente.</p></div></div><div class="group-body"><div class="subgrid">
 <a class="subcard" onclick="abrirTaller('PT V_RCP Pediátrica.html')"><strong>RCP Pediátrica</strong><span>RCP y vía aérea.</span></a>
 <a class="subcard" onclick="abrirTaller('PT V_RCP Pediátrica Avanzada.html')"><strong>RCP Pediátrica Avanzada</strong><span>RCP, vía aérea y administración de fármacos.</span></a>
 <a class="subcard" onclick="abrirTaller('PT V_RCP Adulto.html')"><strong>RCP Adulto</strong><span>RCP, vía aérea y DESA.</span></a>
 <a class="subcard" onclick="abrirTaller('PT V_Venopunción Pediátrica.html')"><strong>Venopunción Pediátrica</strong><span>Accede al formulario de solicitud de material.</span></a>
 </div></div></section>
+
+<div class="menu-individual">
+<ul class="menu-talleres">
+<li><a onclick="abrirTaller('Simulación y Modelado Clínico.html')">Simulación y Modelado Clínico</a><p>Accede al formulario de solicitud de material del taller.</p></li></ul>
+</div>
+
 </main>
 <script>function abrirTaller(urlArchivo){window.open(urlArchivo,'_blank');}</script>
 </body></html>
