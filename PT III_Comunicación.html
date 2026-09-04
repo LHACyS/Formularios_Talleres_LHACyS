@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LHACyS - Solicitud de Material: Auscultación Cardiopulmonar</title>
+<title>LHACyS - Solicitud de Material: PT III: Comunicación</title>
 
 <style>
 body {
@@ -310,13 +310,14 @@ body.modal-abierto{overflow:hidden}.modal-pdf{display:none;position:fixed;inset:
 
   <div class="header-banner">
     <img class="header-banner-logo" src="logo_LHACys_rrss.jpg" alt="Logotipo LHACyS y UAM">
-    <h1>LHACyS - Solicitud de Material: Auscultación Cardiopulmonar</h1>
+    <h1>LHACyS - Solicitud de Material: PT III: Comunicación</h1>
   </div>
 
   <div class="container">
 
         <p class="instruction">Modifique las cantidades del material que necesite para su taller. Cuando finalice, pulse el botón <strong>«Guardar como PDF y preparar correo»</strong>.<br><br>El sistema le permitirá guardar el PDF y, a continuación, preparará automáticamente un correo dirigido al LHACyS. Recuerde adjuntar el archivo antes de enviarlo.</p>
 
+    <!-- Datos de la persona que pide -->
     <div class="solicitante-box">
       <div class="form-group">
         <label for="nombre">Nombre del Profesor / Solicitante:</label>
@@ -328,8 +329,9 @@ body.modal-abierto{overflow:hidden}.modal-pdf{display:none;position:fixed;inset:
       </div>
     </div>
 
-    <input type="hidden" name="_subject" value="Nueva Solicitud de Material: Obstetricia y Ginecología">
+    <input type="hidden" name="_subject" value="Nueva Solicitud de Material: PT III: Comunicación">
 
+    <!-- SECCIÓN 1: MATERIAL POR ESTUDIANTE -->
     <div class="section">
       <h2>Material por estudiante</h2>
       <table id="tabla-estudiante">
@@ -341,12 +343,13 @@ body.modal-abierto{overflow:hidden}.modal-pdf{display:none;position:fixed;inset:
           </tr>
         </thead>
         <tbody>
-          <tr><td>Guantes</td><td>2 por estudiante</td><td class="col-solicitada"><input type="number" name="Cant_Guantes" class="input-cantidad" min="0" placeholder="0"></td></tr>
         </tbody>
       </table>
+      <!-- Botón dinámico estudiante -->
       <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-estudiante', 'Extra_Estudiante')">＋ Añadir fila de material extra</button>
     </div>
 
+    <!-- SECCIÓN 2: MATERIAL COMPARTIDO -->
     <div class="section">
       <h2>Material compartido</h2>
       <table id="tabla-compartido">
@@ -358,24 +361,40 @@ body.modal-abierto{overflow:hidden}.modal-pdf{display:none;position:fixed;inset:
           </tr>
         </thead>
         <tbody>
-          <tr><td>Lubricante</td><td>1 bote por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Lubricante_Botes" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Biombo</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Biombo" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Camilla</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Camilla" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Palo de goteo</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Palo_Goteo" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Juego de sábanas</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Juego_Sabanas" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Almohada</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Almohada" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Palangana</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Palangana" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Material de aseo</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Material_Aseo" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Esfingomanómetro</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Esfingomanometro" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Fonendoscopio</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Fonendoscopio" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Mesilla y silla de acompañante</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Mesilla_Silla_Acompanante" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Máscara de silicona</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Mascara_Silicona" class="input-cantidad" min="0" placeholder="0"></td></tr>
         </tbody>
       </table>
+      <!-- Botón dinámico compartido -->
       <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-compartido', 'Extra_Compartido')">＋ Añadir fila de material extra</button>
     </div>
 
+    <!-- SECCIÓN 3: COMENTARIOS Y OBSERVACIONES -->
     <div class="section">
       <h2>Comentarios y Organización del Taller</h2>
       <div class="comentarios-box">
         <label style="color: #555; font-size: 0.95em;" for="comentarios">Indique aquí cualquier especificación adicional sobre la distribución de las mesas, necesidades del aula o variaciones en los materiales:</label>
-        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Dividir la sala en 2 zonas distitnas..." oninput="ajustarAlturaComentarios()"></textarea>
+        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Dejar todo preparado sobre una mesa para poder desplazarlo al seminario correspondiente antes del inicio..." oninput="ajustarAlturaComentarios()"></textarea>
         <div id="comentarios-impresion" class="comentarios-impresion" aria-hidden="true"></div>
       </div>
     </div>
+
   </div>
+
 </form>
 
+<!-- SCRIPT DE JAVASCRIPT PARA CREAR FILAS INFINITAS -->
 <script>
+  // Contadores independientes para asignar un nombre único a cada input que se cree
   let contadores = {
     'tabla-estudiante': 1,
     'tabla-compartido': 1
@@ -384,7 +403,11 @@ body.modal-abierto{overflow:hidden}.modal-pdf{display:none;position:fixed;inset:
   function agregarFilaExtra(idTabla, prefijoName) {
     const tbody = document.getElementById(idTabla).getElementsByTagName('tbody')[0];
     const num = contadores[idTabla];
+    
+    // Crear el elemento de fila (tr)
     const nuevaFila = document.createElement('tr');
+    
+    // Configurar las tres celdas interiores
     nuevaFila.innerHTML = `
       <td>
         <textarea name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" rows="1" placeholder="Nombre del material añadido..." oninput="actualizarMaterial(this)"></textarea>
@@ -395,7 +418,11 @@ body.modal-abierto{overflow:hidden}.modal-pdf{display:none;position:fixed;inset:
         <input type="number" name="${prefijoName}_Cant_${num}" class="input-cantidad" min="0" placeholder="0">
       </td>
     `;
+    
+    // Inyectar la fila al final del cuerpo de la tabla
     tbody.appendChild(nuevaFila);
+    
+    // Incrementar el contador para el próximo clic
     contadores[idTabla]++;
   }
 
@@ -436,8 +463,8 @@ body.modal-abierto{overflow:hidden}.modal-pdf{display:none;position:fixed;inset:
         solicitante = "Sin_Nombre";
     }
 
-    // 2. Usar directamente "ACP" como nombre del taller
-    let nombreTaller = "ACP";
+    // 2. Usar directamente "PT III" como nombre del taller
+    let nombreTaller = "PT III";
 
     // 3. Obtener y formatear la fecha actual (AAMMDD)
     let fechaActual = new Date();
